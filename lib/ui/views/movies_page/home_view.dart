@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:movies_application/core/constants/ui/color_constants.dart';
 import 'package:movies_application/core/constants/ui/padding_constants.dart';
-import 'package:movies_application/core/constants/url/url_constants.dart';
+
 
 import 'package:movies_application/core/models/movie_models/categories_model/category_model.dart';
 
-import 'package:movies_application/core/models/movie_models/movies_models/movie_model.dart';
 import 'package:movies_application/core/services/movies_service/categories_service.dart';
-import 'package:movies_application/core/services/movies_service/movies_service.dart';
+
 import 'package:movies_application/ui/widgets/cards/categories_card.dart';
+import 'package:movies_application/ui/widgets/components/center_Text_widget.dart';
+import 'package:movies_application/ui/widgets/components/center_circular_progress_widget.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -18,9 +19,12 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   Future<List<CategoryModel>> category;
+
   CategoriesService get categoriesService {
     return CategoriesService();
   }
+
+ 
 
   @override
   void initState() {
@@ -51,10 +55,30 @@ class _HomeViewState extends State<HomeView> {
 
   FutureBuilder<List<CategoryModel>> buildFutureBuilder(double yourHeight) {
     return FutureBuilder<List<CategoryModel>>(
-        future: category,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
+      future: category,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return CenterCircularProgressIndicator();
+
+          case ConnectionState.none:
+            return CenterText(text: "İnternet Bağlantısında sorun var");
+
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              return buildColumnCategories(yourHeight, snapshot);
+            } else {
+              return CenterText(
+                text: "KATEGORİ BULUNAMADI",
+              );
+            }
+        }
+      },
+    );
+  }
+
+  Column buildColumnCategories(double yourHeight, AsyncSnapshot<List<CategoryModel>> snapshot) {
+    return Column(
               children: [
                 SizedBox(
                   height: yourHeight,
@@ -69,16 +93,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ],
             );
-          } else {
-            return buildCenterCircular();
-          }
-        },
-      );
   }
 
-  Center buildCenterCircular() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
+  
 }

@@ -25,7 +25,7 @@ class _MovieDetailState extends State<MovieDetail> {
     super.initState();
     movie = moviesServices.movieService();
   }
-
+                                                                                              
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -87,7 +87,7 @@ class _MovieDetailState extends State<MovieDetail> {
 
   Image buildImage(AsyncSnapshot snapshot, MovieModel movieInfo) {
     return Image.network(
-      UrlConstants.IMAGE_URL + movieInfo.movie_name+".jpg",
+      UrlConstants.IMAGE_URL + movieInfo.movie_image,
       fit: BoxFit.cover,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {

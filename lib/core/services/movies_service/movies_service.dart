@@ -1,37 +1,14 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:movies_application/core/constants/url/url_constants.dart';
 
+import 'package:movies_application/core/constants/url/url_constants.dart';
 import 'package:movies_application/core/models/movie_models/movies_models/movie_answer_model.dart';
 import 'package:movies_application/core/models/movie_models/movies_models/movie_model.dart';
+import 'package:movies_application/core/services/movies_service/base_service.dart';
 
-class MoviesServices{
-
-  List<MovieModel> _movieAnswerService(String answer){
-
-    var decoded=json.decode(answer);
-
-    return MovieAnswerModel.fromJson(decoded).movies;
-
-
-
+class MoviesServices {
+  Future<List<MovieModel>> movieService() {
+    return BaseServices().baseService(UrlConstants.ALL_MOVIES).then((value) {
+      return MovieAnswerModel.fromJson(value).movies;
+    });
   }
-
-    Future<List<MovieModel>> movieService()async{
-
-      var response=await http.get(UrlConstants.ALL_MOVIES);
-
-      return _movieAnswerService(response.body);
-      
-
-
-
-    }
-
-
-
-
-
-
-
 }

@@ -55,7 +55,7 @@ class _MoviesCardState extends State<MoviesCard> {
   Image buildImage(AsyncSnapshot<List<MovieModel>> snapshot, int index) {
     return Image.network(
               UrlConstants.IMAGE_URL +
-                  snapshot.data[index].movie_name+".jpg",
+                  snapshot.data[index].movie_image,
               fit: BoxFit.cover,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) {
